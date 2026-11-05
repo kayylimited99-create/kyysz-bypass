@@ -1,1 +1,53 @@
 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kyysz Bypass</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b1220;color:#fff;font-family:Arial;display:grid;place-items:center;min-height:100vh;padding:20px}
+main{width:100%;max-width:480px;background:#141f33;padding:25px;border-radius:18px}
+h1{color:#79a6ff}
+p{color:#aab8ce}
+input,button{width:100%;padding:14px;margin-top:12px;border-radius:10px}
+input{background:#0b1220;border:1px solid #344762;color:white}
+button{background:#5b8cff;color:white;border:0;font-weight:bold}
+#result{margin-top:18px;overflow-wrap:anywhere}
+a{color:#79a6ff}
+</style>
+</head>
+<body>
+<main>
+<h1>Kyysz Bypass</h1>
+<p>Masukkan link SafeLinku untuk memeriksa tujuan redirect.</p>
+<form id="form">
+<input id="url" type="url" placeholder="Tempel link di sini..." required>
+<button id="btn">Cek Link</button>
+</form>
+<div id="result"></div>
+</main>
+<script>
+document.getElementById('form').onsubmit=async e=>{
+e.preventDefault();
+const result=document.getElementById('result');
+const btn=document.getElementById('btn');
+btn.disabled=true;
+result.textContent='Memeriksa link...';
+try{
+const r=await fetch('/api/resolve?url='+encodeURIComponent(document.getElementById('url').value));
+const d=await r.json();
+if(!r.ok)throw Error(d.error);
+result.innerHTML='Tujuan: <a target="_blank" rel="noopener noreferrer"></a>';
+const a=result.querySelector('a');
+a.href=d.destination;
+a.textContent=d.destination;
+}catch(err){
+result.textContent='Gagal: '+err.message;
+}
+btn.disabled=false;
+};
+</script>
+</body>
+</html>
